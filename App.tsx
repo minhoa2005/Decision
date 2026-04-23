@@ -4,42 +4,31 @@
  *
  * @format
  */
-
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { StackTabs } from './src/navigations/StackTabs';
+import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider, initialWindowMetrics } from 'react-native-safe-area-context';
+import { StatusBar, useColorScheme } from 'react-native';
+import { TamaguiProvider, Theme } from 'tamagui';
+import { config } from './tamagui.config'
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
+  const theme = useColorScheme();
+  console.log('Current theme:', theme);
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <TamaguiProvider config={config} defaultTheme={theme === 'dark' ? 'dark' : 'light'}>
+        <Theme name={theme === 'dark' ? 'dark' : 'light'}>
+          <StatusBar barStyle={theme === 'dark' ? 'light-content' : 'dark-content'} />
+          <NavigationContainer>
+            <StackTabs />
+          </NavigationContainer>
+        </Theme>
+      </TamaguiProvider>
     </SafeAreaProvider>
   );
 }
 
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
 
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
-  );
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;
